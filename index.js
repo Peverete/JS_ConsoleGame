@@ -1,67 +1,114 @@
-function computerPlay(){
-    options = ['rock', 'paper','scissors'];
-    return(options[Math.floor(Math.random()*3)]);
+let playerScore = 0;
+let computerScore = 0;
+let message = "";
+let playerWins = 0;
+let computerWins = 0;
+let again = false;
+
+function computerPlay() {
+  const choices = ["Rock", "Paper", "Scissor"];
+  const computerHand =
+    choices[Math.floor(Math.random() * choices.length)].toLowerCase();
+  return computerHand;
 }
 
-function playerSelection(){
-    let selection;
-    try {
-        selection = prompt(`Play a game of Rock, Paper, Scissors.
-    What is your selection`).toString().toLocaleLowerCase();        
-        if(selection =='rock' || selection =='paper' || selection =='scissors'){
-            
-        } else {
-            alert(`Please enter a valid answer`);
-        }
-    } catch (error){
-        alert(`Please enter a valid answer.`);
-    };
-    console.log(`Player selection is ${selection}`)
-    return selection;
+function playRound(playerSelection, computerSelection) {
+  if (playerSelection === computerSelection) {
+    playerScore;
+    computerScore;
+    return `It's a Tie, You both picked ${playerSelection}`;
+  } else if (
+    (playerSelection === "rock" && computerSelection === "scissor") ||
+    (playerSelection === "paper" && computerSelection === "rock") ||
+    (playerSelection === "scissor" && computerSelection === "paper")
+  ) {
+    playerScore++;
+    return `Nice! You Win! ${playerSelection} beats ${computerSelection}`;
+  } else if (
+    (playerSelection === "rock" && computerSelection === "paper") ||
+    (playerSelection === "paper" && computerSelection === "scissor") ||
+    (playerSelection === "scissor" && computerSelection === "rock")
+  ) {
+    computerScore++;
+    return `You lose! ${computerSelection} beats ${playerSelection}`;
+  }
 }
 
-function computerSelection(){
-    let round = computerPlay();
-    console.log(round);
-    return round;
-}
+function game() {
+  for (let i = 1; i <= 5; i++) {
+    const computerSelection = computerPlay();
+    let playerSelection = prompt("Rock, Paper or Scissors")
+      .toLowerCase()
+      .replace(/\s+/g, "");
 
-function playRound(){
-    player = playerSelection();
-    computer = computerSelection();
-    let winner = `It is a tie. Go another round.`;
-    if (computer == 'rock'){
-        if (player == 'scissors'){
-            winner = `You Lose! Rock beats Scissors`;
-        } else {
-            winner = `You Win! Paper beats Rock`;        
-        }        
-    }
-    console.log(winner);
-    return winner;
-}
+    if (playerSelection === "rocks" || playerSelection === "rock") {
+      playerSelection = "rock";
+      console.log(`Round: ${i}
+      Player selection is: ${playerSelection}
+      Computer selection is: ${computerSelection}`);
 
-function game(){
-    let wincount = 0;
-    for (let i=0; i < 5; i++){
-        let result = playRound();
-        if (result.includes('Win')){
-            wincount++;
-        } else if (result.includes('Lose')){
-            wincount--;
-        } else if (result.includes('tie')){
-          wincount + 0;
-        }
-    };    
-    if (wincount>2){
-        alert(`Congratulations. You've won 3 out of 5!`);
-    } else if (wincount < -2){
-        alert(`You Lose. It was 3 out of 5!`);        
-    } else if (wincount == 0){
-        alert(`Achievement unlocked: Unbelievable odds`)
+      console.log(playRound(playerSelection, computerSelection));
+    } else if (playerSelection === "papers" || playerSelection === "paper") {
+      playerSelection = "paper";
+      console.log(`Round: ${i}
+      Player selection is: ${playerSelection}
+      Computer selection is: ${computerSelection}`);
+
+      console.log(playRound(playerSelection, computerSelection));
+    } else if (
+      playerSelection === "scissors" ||
+      playerSelection === "scissor"
+    ) {
+      playerSelection = "scissor";
+      console.log(`Round: ${i}
+      Player selection is: ${playerSelection}
+      Computer selection is: ${computerSelection}`);
+
+      console.log(playRound(playerSelection, computerSelection));
     } else {
-        alert(`Thank you for playing!`)
-    };
+      console.log("Invalid Entry");
+      i--;
+    }
+  }
+  scoreCard();
+
+  playerScore = 0;
+  computerScore = 0;
 }
 
+const playRequest = function () {
+  if (playAgain()) {
+    return game();
+  } else {
+    alert(`Thank You for playing!
+       The Round score is: 
+       Player: ${playerScore} - Computer: ${computerScore} 
+       Total Game Wins by Player: ${playerWins} 
+       Total Game Wins by Computer: ${computerWins}
+       ${message}`);
+  }
+};
+
+function scoreCard() {
+  if (playerScore > computerScore) {
+    message = "Congratulations! You won!!!";
+    console.log(message);
+    playerWins++;
+    playRequest();
+  } else if (playerScore === computerScore) {
+    message = `You tied with the Computer. Try Again!`;
+    console.log(message);
+    playRequest();
+  } else {
+    message = "Loser! Computer wins the game ;(";
+    console.log(message);
+    computerWins++;
+    playRequest();
+  }
+}
+
+const playAgain = function () {
+  return window.confirm("Do you want to play another round?");
+};
+// Starts the game
 game();
